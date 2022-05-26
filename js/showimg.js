@@ -17,9 +17,9 @@
         }, 250);
     }
     for (var img of imglist)
-        img.addEventListener("click", function () {
-            show(img.getAttribute("src"));
-        });
+        img.onclick = function () {
+            show(this.getAttribute("src"));
+        };
     imgshow.addEventListener("click", function () {
         hide();
     });

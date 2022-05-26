@@ -5,7 +5,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
-        <title>Hello World | Aubrey の小窝</title>
+        <title>希尔排序 | Aubrey の小窝</title>
         <meta name="author" content="Aubrey">
         <meta name="description" content="">
         <meta name="keywords" content="">
@@ -121,14 +121,14 @@
                         
 <div class="article">
     <div>
-        <h1>Hello World </h1>
+        <h1>希尔排序 </h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <svg class="fa-icon"><use xlink:href="#calendar-solid"></use></svg>
             </span>
-            2022/5/25
+            2022/5/26
         </span>
         
         <span class="category">
@@ -148,8 +148,15 @@
             
             <span class="tag">
                 
-                <a href="/tags/主页" style="color: #ffa2c4">
-                    主页
+                <a href="/tags/排序" style="color: #00bcd4">
+                    排序
+                </a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/数据结构与算法" style="color: #03a9f4">
+                    数据结构与算法
                 </a>
             </span>
             
@@ -157,20 +164,78 @@
         
     </div>
     <div class="content" v-pre>
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+        <p>书接上篇：<a href="/2022/05/26/sorted/">十大排序算法汇总</a></p>
+<p>因希尔排序较难，并且使用频率较低，导致需要使用的时候总是忘记，所以写一篇博客记录一下</p>
 <span id="more"></span>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre><code class="bash">$ hexo new &quot;My New Post&quot;
+
+<h3 id="一、概念及其介绍"><a href="#一、概念及其介绍" class="headerlink" title="一、概念及其介绍"></a>一、概念及其介绍</h3><p>希尔排序(Shell Sort)是插入排序的一种，它是针对直接插入排序算法的改进。</p>
+<p>希尔排序又称缩小增量排序，因 DL.Shell 于 1959 年提出而得名。</p>
+<p>它通过比较相距一定间隔的元素来进行，各趟比较所用的距离随着算法的进行而减小，直到只比较相邻元素的最后一趟排序为止。</p>
+<h3 id="二、适用说明"><a href="#二、适用说明" class="headerlink" title="二、适用说明"></a>二、适用说明</h3><p>希尔排序时间复杂度是 <code>O(n^(1.3-2))</code>，空间复杂度为常数阶 <code>O(1)</code>。希尔排序没有时间复杂度为 <code>O(n(logn))</code> 的快速排序算法快 ，因此对中等大小规模表现良好，但对规模非常大的数据排序不是最优选择，总之比一般 <code>O(n^2 )</code> 复杂度的算法快得多。</p>
+<h3 id="三、过程图示"><a href="#三、过程图示" class="headerlink" title="三、过程图示"></a>三、过程图示</h3><p>希尔排序目的为了加快速度改进了插入排序，交换不相邻的元素对数组的局部进行排序，并最终用插入排序将局部有序的数组排序。</p>
+<p>在此我们选择增量 <code>gap=length/2</code>，缩小增量以 <code>gap = gap/2</code> 的方式，用序列 <code>&#123;n/2,(n/2)/2...1&#125;</code> 来表示。</p>
+<p>如图示例：</p>
+<p>（1）初始增量第一趟 <code>gap = length/2 = 4</code></p>
+<p><img src="https://www.runoob.com/wp-content/uploads/2020/09/ShellSort-01.png" alt="img"></p>
+<p>（2）第二趟，增量缩小为 2</p>
+<p><img src="https://www.runoob.com/wp-content/uploads/2020/09/ShellSort-02.png" alt="img"></p>
+<p>（3）第三趟，增量缩小为 1,得到最终排序结果</p>
+<p><img src="https://www.runoob.com/wp-content/uploads/2020/09/ShellSort-03.png" alt="img"></p>
+<h3 id="四、动图展示"><a href="#四、动图展示" class="headerlink" title="四、动图展示"></a>四、动图展示</h3><p>动图展示可前往<a target="_blank" rel="noopener" href="https://www.cs.usfca.edu/~galles/visualization/ComparisonSort.html">此网站</a>，该网站可以查看多种排序动图展示，还可以查看许多算法动图</p>
+<h3 id="五、代码展示"><a href="#五、代码展示" class="headerlink" title="五、代码展示"></a>五、代码展示</h3><p>Python</p>
+<pre><code class="python">def shellSort(arr):
+    import math
+    gap=1
+    while(gap &lt; len(arr)/3):
+        gap = gap*3+1
+    while gap &gt; 0:
+        for i in range(gap,len(arr)):
+            temp = arr[i]
+            j = i-gap
+            while j &gt;=0 and arr[j] &gt; temp:
+                arr[j+gap]=arr[j]
+                j-=gap
+            arr[j+gap] = temp
+        gap = math.floor(gap/3)
+    return arr
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre><code class="bash">$ hexo server
+<p>Java</p>
+<pre><code class="java">public static void shellSort(int[] arr) &#123;
+    int length = arr.length;
+    int temp;
+    for (int step = length / 2; step &gt;= 1; step /= 2) &#123;
+        for (int i = step; i &lt; length; i++) &#123;
+            temp = arr[i];
+            int j = i - step;
+            while (j &gt;= 0 &amp;&amp; arr[j] &gt; temp) &#123;
+                arr[j + step] = arr[j];
+                j -= step;
+            &#125;
+            arr[j + step] = temp;
+        &#125;
+    &#125;
+&#125;
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre><code class="bash">$ hexo generate
+<p>C++</p>
+<pre><code class="c++">template&lt;typename T&gt;
+void shell_sort(T array[], int length) &#123;
+    int h = 1;
+    while (h &lt; length / 3) &#123;
+        h = 3 * h + 1;
+    &#125;
+    while (h &gt;= 1) &#123;
+        for (int i = h; i &lt; length; i++) &#123;
+            for (int j = i; j &gt;= h &amp;&amp; array[j] &lt; array[j - h]; j -= h) &#123;
+                std::swap(array[j], array[j - h]);
+            &#125;
+        &#125;
+        h = h / 3;
+    &#125;
+&#125;
 </code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre><code class="bash">$ hexo deploy
-</code></pre>
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<p>参考地址：</p>
+<p><a target="_blank" rel="noopener" href="https://www.runoob.com/data-structures/shell-sort.html">https://www.runoob.com/data-structures/shell-sort.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.runoob.com/w3cnote/shell-sort.html">https://www.runoob.com/w3cnote/shell-sort.html</a></p>
 
     </div>
     
